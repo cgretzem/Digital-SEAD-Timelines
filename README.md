@@ -32,7 +32,6 @@
                                                
 ```
 ## project description
--------------------------------
 
 During November 2020, Cpl Higginbotham from 1st Bn 12th Marines,
 developed a console program that generates standard Suppression of Enemy Air Defense
