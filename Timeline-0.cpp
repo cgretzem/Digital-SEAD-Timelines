@@ -1,3 +1,4 @@
+//getting input from user//
 #include "timeline.h"
 #include<stdio.h>
 #include<stdlib.h>
