@@ -59,6 +59,6 @@ NonStandard_Timeline::NonStandard_Timeline(int TOT, int TOF, markingType mType, 
 
 std::vector<Sexagesimal> NonStandard_Timeline::makeTimeline()
 {
-    //Need some help here understanding when each round is suppposed to hit
+    //int TOT_HIT
 }
 

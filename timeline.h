@@ -52,9 +52,9 @@ class Timeline
     private:
         markingType mType;
         timelineType tType;
-        int supressionTOF;
+        int supressionTOF; /// Time in seconds 
         int timeOnTarget;
-        int timeOfFlight;
+        int timeOfFlight; /// How long the shell is in the air (seconds)
 
     public:
         /**
@@ -63,7 +63,7 @@ class Timeline
          * 
          * @param TOT the Time on Target. Must be a whole number.
          * 
-         * @param TOF the Time of FLight of the shell. Must be a whole number.
+         * @param TOF the Time of Flight of the shell. Must be a whole number.
          * 
          * @param mType the type of marking round to be fired, if negative do not fire
          * any marking round. 
@@ -134,7 +134,7 @@ class Timeline
          * 
          * @param tl the timeline to be sent out.
          */
-        friend ostream& operator<<(ostream& os, Timeline tl);
+
 
         /**
          * Method for formatting the firing times in a readable way.
