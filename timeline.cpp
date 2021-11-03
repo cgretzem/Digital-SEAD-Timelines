@@ -90,7 +90,7 @@ std::vector<shell> Standard_Timeline::makeTimeline()
         {
             case ILLUM:
                 marking = Sexagesimal(startTime, timeOnTarget, 0) - Sexagesimal(0,0,markingTOF+5 + 45);
-                if(marking > secondHE)
+                if(marking > secondHE && ((marking.getHours() != 0 && secondHE.getHours() != 0) || (marking.getHours() == 0 && secondHE.getHours() == 23)))
                 {
                     timeList.push_back(shell{secondHE, true});
                     timeList.push_back(shell{marking, false});
@@ -104,7 +104,7 @@ std::vector<shell> Standard_Timeline::makeTimeline()
                 break;
             case WP:
                 marking = Sexagesimal(startTime, timeOnTarget, 0) - Sexagesimal(0,0,timeOfFlight+5 + 30);
-                if(marking > secondHE)
+                if(marking > secondHE && ((marking.getHours() != 0 && secondHE.getHours() != 0) || (marking.getHours() == 0 && secondHE.getHours() == 23)))
                 {
                     timeList.push_back(shell{secondHE, true});
                     timeList.push_back(shell{marking, false});
@@ -147,7 +147,7 @@ std::vector<shell> Standard_Timeline::makeTimeline()
         {
             case ILLUM:
                 marking = Sexagesimal(startTime, timeOnTarget, 0) - Sexagesimal(0,0,markingTOF+5 + 45);
-                if(marking > secondHE)
+                if(marking > secondHE && ((marking.getHours() != 0 && secondHE.getHours() != 0) || (marking.getHours() == 0 && secondHE.getHours() == 23)))
                 {
                     timeList.push_back(shell{secondHE, true});
                     timeList.push_back(shell{marking, false});
@@ -161,7 +161,7 @@ std::vector<shell> Standard_Timeline::makeTimeline()
                 break;
             case WP:
                 marking = Sexagesimal(startTime, timeOnTarget, 0) - Sexagesimal(0,0,timeOfFlight+5 + 30);
-                if(marking > secondHE)
+                if(marking > secondHE && ((marking.getHours() != 0 && secondHE.getHours() != 0) || (marking.getHours() == 0 && secondHE.getHours() == 23)))
                 {
                     timeList.push_back(shell{secondHE, true});
                     timeList.push_back(shell{marking, false});

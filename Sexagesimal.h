@@ -18,6 +18,9 @@ class Sexagesimal
         friend ostream& operator<<(ostream& os, Sexagesimal sx);
         string print();
         int getSeconds();
+        int getHours();
+        int getMinutes();
+        int getTotalSeconds();
     private:
         int hours;
         int minutes;
@@ -55,9 +58,24 @@ static Sexagesimal convertToBase60(int totalSeconds)
     return Sexagesimal(hours, minutes, seconds);
 }
 
-int Sexagesimal::getSeconds()
+int Sexagesimal::getTotalSeconds()
 {
     return totalSeconds;
+}
+
+int Sexagesimal::getHours()
+{
+    return hours;
+}
+
+int Sexagesimal::getSeconds()
+{
+    return seconds;
+}
+
+int Sexagesimal::getMinutes()
+{
+    return minutes;
 }
 
 
@@ -69,12 +87,12 @@ ostream& operator<<(ostream& os, Sexagesimal sx)
 Sexagesimal Sexagesimal::operator+ (Sexagesimal num)
 {
     //add by adding total seconds of both nums together, then converting back
-    int total = this->totalSeconds + num.getSeconds(); 
+    int total = this->totalSeconds + num.getTotalSeconds(); 
     return convertToBase60(total);
 }
 Sexagesimal Sexagesimal::operator-(Sexagesimal num) 
 {
-    int total = this->totalSeconds - num.getSeconds();
+    int total = this->totalSeconds - num.getTotalSeconds();
     return convertToBase60(total);
 }
 Sexagesimal Sexagesimal::operator+(int seconds)
