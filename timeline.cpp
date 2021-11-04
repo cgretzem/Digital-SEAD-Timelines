@@ -69,10 +69,10 @@ void Timeline::print()
 
 Standard_Timeline::Standard_Timeline(int TOT, int TOF, markingType mType, int MTOF, timelineType tType): Timeline(TOT, TOF, mType, MTOF, tType)
 {
-    this->timeList = this->makeTimeline();
+    this->timeList = this->makeTimelist();
 }
 
-std::vector<shell> Standard_Timeline::makeTimeline()
+std::vector<shell> Standard_Timeline::makeTimelist()
 {
     if(tType == CONTINUOUS)
     {
@@ -181,45 +181,59 @@ std::vector<shell> Standard_Timeline::makeTimeline()
 
 }
 
-
-
-//need to fix this method, right now it is the same as standard
-NonStandard_Timeline::NonStandard_Timeline(int TOT, int TOF, markingType mType, int STOF, timelineType tType): Timeline(TOT, TOF, mType, STOF, tType)
+NonStandard_Timeline::NonStandard_Timeline(int TOT, int TOF, markingType mType, int STOF, timelineType tType, std::vector<fireRange> firingRanges, int fireFreq): Timeline(TOT, TOF, mType, STOF, tType)
 {
-    this->timeList = this->makeTimeline();
+    this->fireFreq = fireFreq;
+    this->firingRanges = firingRanges;
+    this->timeList = this->makeTimelist();
 }
 
-std::vector<shell> NonStandard_Timeline::makeTimeline()
+std::vector<shell> NonStandard_Timeline::makeTimelist()
 {
-    //int TOT_HIT
+    Sexagesimal currentTime;
+    for(fireRange fr : firingRanges)
+    {
+        currentTime = Sexagesimal(startTime, timeOnTarget, 0) + Sexagesimal(0,fr.startMin, 0) - Sexagesimal(0, 0, timeOfFlight+5);
+        while(currentTime < (Sexagesimal(startTime, timeOnTarget, 0) + Sexagesimal(0, fr.endMin, 0)) )
+        {
+            timeList.push_back(shell{currentTime, true});
+            currentTime = currentTime + Sexagesimal(0,0,fireFreq);
+        }
+    }
+    return timeList;
 }
 
 int main()
 {
-    int tot, tof, mtof;
-    mtof = 0;
-    markingType mType;
-    timelineType tType;
-    cout <<"Enter Time on Target" << endl;
-    cin >> tot;
-    cout << "Enter time of fire" << endl;
-    cin >> tof;
-    int marking;
-    cout << "Enter marking type -" << endl << "0 - NONE\n1 - ILLUM\n2 - WP" << endl;
-    cin >> marking;
-    //turns int into enum value
-    mType = static_cast<markingType>(marking);
-    if(mType != NEGATIVE)
-    {
-        cout <<"Enter marking Time of Flight" << endl;
-        cin >> mtof;
-    }
-    cout << "Choose timeline type -" << endl << "0 - Continuous\n1 - Interrupted" << endl;
-    int timeline;
-    cin >> timeline;
-    //turns int into enum value
-    tType = static_cast<timelineType>(timeline);
-    Standard_Timeline t = Standard_Timeline(tot, tof, mType, mtof, tType);
-    t.print();
+    // int tot, tof, mtof;
+    // mtof = 0;
+    // markingType mType;
+    // timelineType tType;
+    // cout <<"Enter Time on Target" << endl;
+    // cin >> tot;
+    // cout << "Enter time of fire" << endl;
+    // cin >> tof;
+    // int marking;
+    // cout << "Enter marking type -" << endl << "0 - NONE\n1 - ILLUM\n2 - WP" << endl;
+    // cin >> marking;
+    // //turns int into enum value
+    // mType = static_cast<markingType>(marking);
+    // if(mType != NEGATIVE)
+    // {
+    //     cout <<"Enter marking Time of Flight" << endl;
+    //     cin >> mtof;
+    // }
+    // cout << "Choose timeline type -" << endl << "0 - Continuous\n1 - Interrupted" << endl;
+    // int timeline;
+    // cin >> timeline;
+    // //turns int into enum value
+    // tType = static_cast<timelineType>(timeline);
+    // Standard_Timeline t = Standard_Timeline(tot, tof, mType, mtof, tType);
+    // t.print();
+    std::vector<fireRange> frVec;
+    frVec.push_back(fireRange{-2, 1});
+    frVec.push_back(fireRange{3, 5});
+    NonStandard_Timeline nST = NonStandard_Timeline(40, 30, NEGATIVE, 0, CONTINUOUS, frVec, 30);
+    nST.print();
 }
 

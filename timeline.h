@@ -52,6 +52,20 @@ typedef enum timelineType
 }timelineType;
 
 /**
+ * Represents a range of values to fire under, based on TOT as 0.
+ *
+ * These are integer values that represent the + or - that the firing is to occur.
+ * For example, if TOT is 15, range of -1 to +2, firing would occur from 14 to 16
+ */
+typedef struct fireRange
+{
+    ///Represents the offset of the starting minute based on the TOT
+    int startMin;
+    ///Represents the offset of the ending minute based on the TOT
+    int endMin;
+}fireRange;
+
+/**
  * Abstract class used as a base class for Standard_Timeline
  * and NonStandard_Timeline.
  * 
@@ -114,12 +128,12 @@ class Timeline
         Timeline(int startTime, int TOT, int TOF, markingType mType, int MTOF, timelineType tType);
 
         /**
-         * Fills the `timeLine` table with Sexagesimal times that represent when each shell should be fired.
+         * Fills the `timeList` table with Sexagesimal times that represent when each shell should be fired.
          * This method is pure virtual void, so it must be overwritten in both derived classes.
          * 
          * @return firing times.
          */
-        virtual std::vector<shell> makeTimeline() = 0;
+        virtual std::vector<shell> makeTimelist() = 0;
 
         /**
          * Getter method for the `timeList` vector.
@@ -191,9 +205,9 @@ class Standard_Timeline final: public Timeline
     public:
         /**
          * Constructor for  Standard_Timeline class, uses parent constructor to initalize all private members
-         * except for `timeList`, then calls `makeTimeline()` to fill `timeList` with data.
+         * except for `timeList`, then calls `makeTimelist()` to fill `timeList` with data.
          * 
-         * @see makeTimeLine()
+         * @see makeTimelist()
          * 
          * @param TOT the Time on Target. Must be a whole number.
          * 
@@ -211,11 +225,11 @@ class Standard_Timeline final: public Timeline
         Standard_Timeline(int TOT, int TOF, markingType mType, int MTOF, timelineType tType);
     private:
         /**
-         * Fills the `timeLine` table with Sexagesimal times that represent when each shell should be fired.
+         * Fills the `timeList` table with Sexagesimal times that represent when each shell should be fired.
          *  
          * @return shell types and firing times.
          */
-        std::vector<shell> makeTimeline();
+        std::vector<shell> makeTimelist();
 };
 
 /**
@@ -231,9 +245,9 @@ class NonStandard_Timeline final: public Timeline
     //TODO : change constructor to include new parameters for a nonstandard timeline
         /**
          * Constructor for  NonStandard_Timeline class, uses parent constructor to initalize all private members
-         * except for `timeList`, then calls `makeTimeline()` to fill `timeList` with data.
+         * except for `timeList`, then calls `makeTimelist()` to fill `timeList` with data.
          * 
-         * @see makeTimeLine()
+         * @see makeTimelist()
          * 
          * @param TOT the Time on Target. Must be a whole number.
          * 
@@ -246,16 +260,22 @@ class NonStandard_Timeline final: public Timeline
          * 
          * @param tType the type of timeline to be created. Can be either continuous or interrupted.
          * 
+         * @param firingRanges A list of ranges over which to fire shells.
+         * 
+         * @param fireFreq How frequently, in seconds, a round is fired. Default is 30.
+         * 
          * @return the `NonStandard_Timeline` object.
          */
-        NonStandard_Timeline(int TOT, int TOF, markingType mType, int MTOF, timelineType tType);
+        NonStandard_Timeline(int TOT, int TOF, markingType mType, int MTOF, timelineType tType, std::vector<fireRange> firingRanges, int fireFreq);
         private:
             /**
-             * Fills the `timeLine` table with Sexagesimal times that represent when each shell should be fired.
+             * Fills the `timeList` table with Sexagesimal times that represent when each shell should be fired.
              *  
              * @return shell types and firing times.
              */
-            std::vector<shell> makeTimeline();
+            std::vector<shell> makeTimelist();
+            std::vector<fireRange> firingRanges;
+            int fireFreq;
 };
 
 
