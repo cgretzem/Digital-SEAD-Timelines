@@ -8,6 +8,8 @@ class Sexagesimal
     public:
         Sexagesimal();
         Sexagesimal(int hours, int minutes, int seconds);
+        void setDay(int day);
+        int getDay();
         Sexagesimal operator+(Sexagesimal num);
         Sexagesimal operator-(Sexagesimal num);
         //+ and - int overload assumes seconds
@@ -15,6 +17,9 @@ class Sexagesimal
         Sexagesimal operator-(int seconds);
         friend bool operator>(Sexagesimal s1, Sexagesimal s2);
         friend bool operator<(Sexagesimal s1, Sexagesimal s2);
+        friend bool operator==(Sexagesimal s1, Sexagesimal s2);
+        friend bool operator<=(Sexagesimal s1, Sexagesimal s2);
+        friend bool operator>=(Sexagesimal s1, Sexagesimal s2);
         friend ostream& operator<<(ostream& os, Sexagesimal sx);
         string print();
         int getSeconds();
@@ -26,6 +31,7 @@ class Sexagesimal
         int minutes;
         int seconds;
         int totalSeconds;
+        int day;
 };
 
 
@@ -35,6 +41,7 @@ Sexagesimal::Sexagesimal()
     this->minutes = 0;
     this->seconds = 0;
     this->totalSeconds = 0;
+    day = 0;
 }
 
 Sexagesimal::Sexagesimal(int hours, int minutes, int seconds)
@@ -43,19 +50,36 @@ Sexagesimal::Sexagesimal(int hours, int minutes, int seconds)
     this->minutes = minutes;
     this->seconds = seconds;
     this->totalSeconds = ((hours * 3600)+ (minutes*60) + seconds);
+    day = 0;
 }
 
-//could add functinality for changing the day in this method, if you want to specify day and time of attacks.
+int Sexagesimal::getDay()
+{
+    return day;
+}
+
+void Sexagesimal::setDay(int newDay)
+{
+    day = newDay;
+}
+
 static Sexagesimal convertToBase60(int totalSeconds)
 {
     //if seconds are negative, turn back the clock to end of last day, ie -5 would be 23:59:55
-    if(totalSeconds < 0)
+    int negDays = 0;
+    while(totalSeconds < 0)
+    {
         totalSeconds = (3600*24)+totalSeconds;
+        negDays++;
+    }
+        
     int hours = totalSeconds / 3600;
     int minutes = (totalSeconds%3600)/60;
     int seconds = (totalSeconds%3600)%60;
+    Sexagesimal output = Sexagesimal(hours, minutes, seconds);
+    output.setDay((hours/24) - negDays);
     hours = (hours %24);
-    return Sexagesimal(hours, minutes, seconds);
+    return output;
 }
 
 int Sexagesimal::getTotalSeconds()
@@ -106,11 +130,44 @@ Sexagesimal Sexagesimal::operator-(int seconds)
 
 bool operator>(Sexagesimal s1, Sexagesimal s2)
 {
+    if(s1.getDay() > s2.getDay())
+        return true;
+    if(s2.getDay() > s1.getDay())
+        return false;
     return s1.totalSeconds > s2.totalSeconds;
 }
 bool operator<(Sexagesimal s1, Sexagesimal s2)
 {
+    if(s1.day < s2.day)
+        return true;
+    if(s2.day < s1.day)
+        return false;
     return s1.totalSeconds < s2.totalSeconds;
+}
+
+bool operator==(Sexagesimal s1, Sexagesimal s2)
+{
+    if(s1.day == s2.day && s1.totalSeconds == s2.totalSeconds)
+        return true;
+    return false;
+}
+
+bool operator>=(Sexagesimal s1, Sexagesimal s2)
+{
+    if(s1 == s2)
+        return true;
+    if(s1 > s2)
+        return true;
+    return false;
+}
+
+bool operator<=(Sexagesimal s1, Sexagesimal s2)
+{
+    if(s1 == s2)
+        return true;
+    if(s1 < s2)
+        return true;
+    return false;
 }
 
 string Sexagesimal::print()

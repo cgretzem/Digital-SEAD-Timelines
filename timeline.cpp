@@ -1,23 +1,16 @@
 #include "timeline.h"
 
-Timeline::Timeline(int TOT, int TOF, markingType mType, int STOF, timelineType tType)
+Timeline::Timeline(int TOT, int TOF)
 {
     this->timeOnTarget = TOT;
     this->timeOfFlight = TOF;
-    this->mType = mType;
-    this->markingTOF = STOF;
-    this->tType = tType;
-    this->startTime = 0;
     //Timeline is abstract, timeList needs to be initalized in derived classes
 }
-Timeline::Timeline(int startTime, int TOT, int TOF, markingType mType, int STOF, timelineType tType)
+Timeline::Timeline(int startTime, int TOT, int TOF)
 {
     this->timeOnTarget = TOT;
     this->timeOfFlight = TOF;
-    this->mType = mType;
-    this->markingTOF = STOF;
-    this->tType = tType;
-    this->startTime = startTime;
+    
     //Timeline is abstract, timeList needs to be initalized in derived classes
 }
 
@@ -31,20 +24,6 @@ int Timeline::getTOF()
     return this->timeOfFlight;
 }
 
-int Timeline::getMTOF()
-{
-    return this->markingTOF;
-}
-
-markingType Timeline::getMarkingType()
-{
-    return this->mType;
-}
-
-timelineType Timeline::getTimelineType()
-{
-    return this->tType;
-}
 
 std::vector<shell> Timeline::getTimeList()
 {
@@ -55,21 +34,17 @@ void Timeline::print()
 {
     for(shell s : timeList)
     {
-        if(s.isHE)
-            cout << s.fireTime << " : (HE)" << endl;
-        else
-        {
-            if(mType == ILLUM)
-                cout << s.fireTime << " : (ILLUM)" << endl;
-            else
-                cout << s.fireTime << " : (WP)" << endl;
-        }
+        cout << s.fireTime << " : (HE)" << endl;
     }
 }
 
-Standard_Timeline::Standard_Timeline(int TOT, int TOF, markingType mType, int MTOF, timelineType tType): Timeline(TOT, TOF, mType, MTOF, tType)
+Standard_Timeline::Standard_Timeline(int TOT, int TOF, markingType mType, int MTOF, timelineType tType): Timeline(TOT, TOF)
 {
     this->timeList = this->makeTimelist();
+    this->mType = mType;
+    this->markingTOF = MTOF;
+    this->tType = tType;
+    this->startTime = startTime;
 }
 
 std::vector<shell> Standard_Timeline::makeTimelist()
@@ -90,7 +65,7 @@ std::vector<shell> Standard_Timeline::makeTimelist()
         {
             case ILLUM:
                 marking = Sexagesimal(startTime, timeOnTarget, 0) - Sexagesimal(0,0,markingTOF+5 + 45);
-                if(marking > secondHE && ((marking.getHours() != 0 && secondHE.getHours() != 0) || (marking.getHours() == 0 && secondHE.getHours() == 23)))
+                if(marking > secondHE)
                 {
                     timeList.push_back(shell{secondHE, true});
                     timeList.push_back(shell{marking, false});
@@ -104,7 +79,7 @@ std::vector<shell> Standard_Timeline::makeTimelist()
                 break;
             case WP:
                 marking = Sexagesimal(startTime, timeOnTarget, 0) - Sexagesimal(0,0,timeOfFlight+5 + 30);
-                if(marking > secondHE && ((marking.getHours() != 0 && secondHE.getHours() != 0) || (marking.getHours() == 0 && secondHE.getHours() == 23)))
+                if(marking > secondHE)
                 {
                     timeList.push_back(shell{secondHE, true});
                     timeList.push_back(shell{marking, false});
@@ -147,7 +122,7 @@ std::vector<shell> Standard_Timeline::makeTimelist()
         {
             case ILLUM:
                 marking = Sexagesimal(startTime, timeOnTarget, 0) - Sexagesimal(0,0,markingTOF+5 + 45);
-                if(marking > secondHE && ((marking.getHours() != 0 && secondHE.getHours() != 0) || (marking.getHours() == 0 && secondHE.getHours() == 23)))
+                if(marking > secondHE)
                 {
                     timeList.push_back(shell{secondHE, true});
                     timeList.push_back(shell{marking, false});
@@ -161,7 +136,7 @@ std::vector<shell> Standard_Timeline::makeTimelist()
                 break;
             case WP:
                 marking = Sexagesimal(startTime, timeOnTarget, 0) - Sexagesimal(0,0,timeOfFlight+5 + 30);
-                if(marking > secondHE && ((marking.getHours() != 0 && secondHE.getHours() != 0) || (marking.getHours() == 0 && secondHE.getHours() == 23)))
+                if(marking > secondHE)
                 {
                     timeList.push_back(shell{secondHE, true});
                     timeList.push_back(shell{marking, false});
@@ -181,7 +156,38 @@ std::vector<shell> Standard_Timeline::makeTimelist()
 
 }
 
-NonStandard_Timeline::NonStandard_Timeline(int TOT, int TOF, markingType mType, int STOF, timelineType tType, std::vector<fireRange> firingRanges, int fireFreq): Timeline(TOT, TOF, mType, STOF, tType)
+void Standard_Timeline::print()
+{
+    for(shell s : timeList)
+    {
+        if(s.isHE)
+            cout << s.fireTime << " : (HE)" << endl;
+        else
+        {
+            if(mType == ILLUM)
+                cout << s.fireTime << " : (ILLUM)" << endl;
+            else
+                cout << s.fireTime << " : (WP)" << endl;
+        }
+    }
+}
+
+int Standard_Timeline::getMTOF()
+{
+    return this->markingTOF;
+}
+
+markingType Standard_Timeline::getMarkingType()
+{
+    return this->mType;
+}
+
+timelineType Standard_Timeline::getTimelineType()
+{
+    return this->tType;
+}
+
+NonStandard_Timeline::NonStandard_Timeline(int TOT, int TOF, std::vector<fireRange> firingRanges, int fireFreq): Timeline(TOT, TOF)
 {
     this->fireFreq = fireFreq;
     this->firingRanges = firingRanges;
@@ -194,7 +200,7 @@ std::vector<shell> NonStandard_Timeline::makeTimelist()
     for(fireRange fr : firingRanges)
     {
         currentTime = Sexagesimal(startTime, timeOnTarget, 0) + Sexagesimal(0,fr.startMin, 0) - Sexagesimal(0, 0, timeOfFlight+5);
-        while(currentTime < (Sexagesimal(startTime, timeOnTarget, 0) + Sexagesimal(0, fr.endMin, 0)) )
+        while(currentTime <= (Sexagesimal(startTime, timeOnTarget, 0) + Sexagesimal(0, fr.endMin, 0)- Sexagesimal(0, 0, timeOfFlight+5)) )
         {
             timeList.push_back(shell{currentTime, true});
             currentTime = currentTime + Sexagesimal(0,0,fireFreq);
@@ -233,7 +239,7 @@ int main()
     std::vector<fireRange> frVec;
     frVec.push_back(fireRange{-2, 1});
     frVec.push_back(fireRange{3, 5});
-    NonStandard_Timeline nST = NonStandard_Timeline(40, 30, NEGATIVE, 0, CONTINUOUS, frVec, 30);
+    NonStandard_Timeline nST = NonStandard_Timeline(40, 30, frVec, 30);
     nST.print();
 }
 

@@ -3,10 +3,10 @@ using namespace std;
 int main()
 {
     //test 1 -- printing format
-    Sexagesimal s = Sexagesimal(19, 59, 31);
+    Sexagesimal s = Sexagesimal(24, 59, 31);
     cout << "Test 1: " << s << endl;
     //test 2 -- basic addition
-    Sexagesimal t1 = s + Sexagesimal(2, 20, 11);
+    Sexagesimal t1 = s + Sexagesimal(20, 20, 11);
     cout << "Test 2: " << t1 << endl;
     //test 3 -- basic subtraction
     Sexagesimal t2 = s - Sexagesimal(2, 20, 11);

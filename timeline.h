@@ -78,9 +78,6 @@ class Timeline
     protected:
         std::vector<shell> timeList;
         int startTime;
-        markingType mType;
-        timelineType tType;
-        int markingTOF; /// Time in seconds 
         int timeOnTarget;
         int timeOfFlight; /// How long the shell is in the air (seconds)
 
@@ -93,17 +90,10 @@ class Timeline
          * 
          * @param TOF the Time of Flight of the shell. Must be a whole number.
          * 
-         * @param mType the type of marking round to be fired, if negative do not fire
-         * any marking round. 
-         * 
-         * @param MTOF the marking shell time of flight. Must be a whole number.
-         * 
-         * @param tType the type of timeline to be created. Can be either continuous or interrupted.
-         * 
          * @return the `Timeline` object. This object has not set the value of `timeList` yet, so it must
          * be done in the derived classes.
          */
-        Timeline(int TOT, int TOF, markingType mType, int MTOF, timelineType tType);
+        Timeline(int TOT, int TOF);
 
         /**
          * Constructor for abstract Timeline class, initalizes all private members
@@ -125,7 +115,7 @@ class Timeline
          * @return the `Timeline` object. This object has not set the value of `timeList` yet, so it must
          * be done in the derived classes.
          */
-        Timeline(int startTime, int TOT, int TOF, markingType mType, int MTOF, timelineType tType);
+        Timeline(int startTime, int TOT, int TOF);
 
         /**
          * Fills the `timeList` table with Sexagesimal times that represent when each shell should be fired.
@@ -142,12 +132,7 @@ class Timeline
          */
         std::vector<shell> getTimeList();
 
-        /**
-         * Getter method for Supression Time of Flight.
-         * 
-         * @return supressionTOF.
-         */
-        int getMTOF();
+        
 
         /**
          * Getter method for Time on Target.
@@ -163,20 +148,7 @@ class Timeline
          */
         int getTOF();
 
-        /**
-         * Getter method for the marking type.
-         * 
-         * @return marking type.
-         */
-        markingType getMarkingType();
-
-        /**
-         * Getter method for timeline type.
-         * 
-         * @return timeline type.
-         */
-        timelineType getTimelineType();
-
+        
         /**
          * Outstream method for using cout with the timeline.
          * 
@@ -184,12 +156,13 @@ class Timeline
          * 
          * @param tl the timeline to be sent out.
          */
+        friend ostream& operator<<(ostream& os, Timeline tl);
 
 
         /**
          * Method for formatting the firing times in a readable way.
          */
-        void print();
+        virtual void print();
 
 };
 
@@ -223,6 +196,34 @@ class Standard_Timeline final: public Timeline
          * @return the `Standard_Timeline` object.
          */
         Standard_Timeline(int TOT, int TOF, markingType mType, int MTOF, timelineType tType);
+        
+        /**
+         * Getter method for Supression Time of Flight.
+         * 
+         * @return supressionTOF.
+         */
+        int getMTOF();
+
+        /**
+         * Getter method for the marking type.
+         * 
+         * @return marking type.
+         */
+        markingType getMarkingType();
+
+        /**
+         * Getter method for timeline type.
+         * 
+         * @return timeline type.
+         */
+        timelineType getTimelineType();
+
+         /**
+         * Method for formatting the firing times in a readable way.
+         */
+        void print();
+
+
     private:
         /**
          * Fills the `timeList` table with Sexagesimal times that represent when each shell should be fired.
@@ -230,6 +231,9 @@ class Standard_Timeline final: public Timeline
          * @return shell types and firing times.
          */
         std::vector<shell> makeTimelist();
+        markingType mType; ///Marking type of round, ILLUM, WP, or NEGATIVE
+        int markingTOF; /// Time in seconds
+        timelineType tType; ///Type of timeline, CONTINUOUS or INTERRUPTED 
 };
 
 /**
@@ -253,20 +257,13 @@ class NonStandard_Timeline final: public Timeline
          * 
          * @param TOF the Time of FLight of the shell. Must be a whole number.
          * 
-         * @param mType the type of marking round to be fired, if negative do not fire
-         * any marking round. 
-         * 
-         * @param MTOF the marking shell time of flight. Must be a whole number.
-         * 
-         * @param tType the type of timeline to be created. Can be either continuous or interrupted.
-         * 
          * @param firingRanges A list of ranges over which to fire shells.
          * 
          * @param fireFreq How frequently, in seconds, a round is fired. Default is 30.
          * 
          * @return the `NonStandard_Timeline` object.
          */
-        NonStandard_Timeline(int TOT, int TOF, markingType mType, int MTOF, timelineType tType, std::vector<fireRange> firingRanges, int fireFreq);
+        NonStandard_Timeline(int TOT, int TOF, std::vector<fireRange> firingRanges, int fireFreq);
         private:
             /**
              * Fills the `timeList` table with Sexagesimal times that represent when each shell should be fired.
