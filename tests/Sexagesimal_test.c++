@@ -18,9 +18,4 @@ int main()
     Sexagesimal t4 = s - Sexagesimal(20, 50, 50);
     cout << "Test 5: " << t4 << endl;
     //test 6 -- addition using int overload 
-    Sexagesimal t5 = s + 10;
-    cout << "Test 6: " << t5 << endl;
-    //tet 7 -- addition going under 0000
-    Sexagesimal t6 = s - 10;
-    cout << "Test 7: " << t6 << endl;
 }

@@ -112,7 +112,6 @@ std::vector<shell> Standard_Timeline::makeTimelist()
                 timeList.push_back(shell{marking, false});
                 break;
             case WP:
-                                                                                    //marking not TOF?
                 marking = Sexagesimal(startTime, timeOnTarget, 0) - Sexagesimal(0,0,markingTOF+5 + 30);
                 timeList.push_back(shell{marking, false});
             case NEGATIVE:
