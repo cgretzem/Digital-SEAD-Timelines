@@ -4,99 +4,6 @@
 #include <vector>
 
 
-/**
- * Supported marking types for initial marking round before actual shells.
- *
- * These values are used to check which marking round is to be used and compute timelines
- * based on which one is chosen.
- */
-typedef enum markingType
-{
-    ///No marking round is to be fired
-    NEGATIVE,
-    ///Illumination marking round
-    ILLUM,
-    ///White Phosphorus marking round
-    WP
-}markingType;
-
-
-/**
- * A shell object to be used in the timeList to track type of round and what time to fire the round.
- *
- * isHE is used to tell if the shell is marking round or HE round.
- */
-typedef struct shell
-{
-    ///Firing time for round
-    Sexagesimal fireTime;
-    ///Ff round is marking or HE
-    bool isHE;
-     /**
-     * == Operator overload for shells
-     * 
-     * @return true if shell == rhs
-     */
-    bool operator==(shell rhs);
-
-    /**
-     * > Operator overload for shells
-     * 
-     * @return true if shell > rhs
-     */
-    bool operator>(shell rhs);
-
-    /**
-     * < Operator overload for shells
-     * 
-     * @return true if shell < rhs
-     */
-    bool operator<(shell rhs);
-
-    /**
-     * >= Operator overload for shells
-     * 
-     * @return true if shell >= rhs
-     */
-    bool operator>=(shell rhs);
-
-    /**
-     * <= Operator overload for shells
-     * 
-     * @return true if shell <= rhs
-     */
-    bool operator<=(shell rhs);
-}shell;
-
-
-/**
- * Supported Timeline types for computing firing timelines.
- *
- * These values are used to check if there is a delay needed between each round
- * and is to be used and compute timelines
- * based on which one is chosen.
- */
-typedef enum timelineType
-{
-    ///Continuous timeline - shells one after another
-    CONTINUOUS,
-    ///Interrupted timeline - shells have a delay between firing
-    INTERRUPTED
-}timelineType;
-
-/**
- * Represents a range of values to fire under, based on TOT as 0.
- *
- * These are integer values that represent the + or - that the firing is to occur.
- * For example, if TOT is 15, range of -1 to +2, firing would occur from 14 to 16
- */
-typedef struct fireRange
-{
-    ///Represents the offset of the starting minute based on the TOT
-    int startMin;
-    ///Represents the offset of the ending minute based on the TOT
-    int endMin;
-}fireRange;
 
 /**
  * Abstract class used as a base class for Standard_Timeline
@@ -299,6 +206,100 @@ class NonStandard_Timeline final: public Timeline
             std::vector<fireRange> firingRanges;
             int fireFreq;
 };
+
+/**
+ * Supported marking types for initial marking round before actual shells.
+ *
+ * These values are used to check which marking round is to be used and compute timelines
+ * based on which one is chosen.
+ */
+typedef enum markingType
+{
+    ///No marking round is to be fired
+    NEGATIVE,
+    ///Illumination marking round
+    ILLUM,
+    ///White Phosphorus marking round
+    WP
+}markingType;
+
+
+/**
+ * A shell object to be used in the timeList to track type of round and what time to fire the round.
+ *
+ * isHE is used to tell if the shell is marking round or HE round.
+ */
+typedef struct shell
+{
+    ///Firing time for round
+    Sexagesimal fireTime;
+    ///Ff round is marking or HE
+    bool isHE;
+     /**
+     * == Operator overload for shells
+     * 
+     * @return true if shell == rhs
+     */
+    bool operator==(shell rhs);
+
+    /**
+     * > Operator overload for shells
+     * 
+     * @return true if shell > rhs
+     */
+    bool operator>(shell rhs);
+
+    /**
+     * < Operator overload for shells
+     * 
+     * @return true if shell < rhs
+     */
+    bool operator<(shell rhs);
+
+    /**
+     * >= Operator overload for shells
+     * 
+     * @return true if shell >= rhs
+     */
+    bool operator>=(shell rhs);
+
+    /**
+     * <= Operator overload for shells
+     * 
+     * @return true if shell <= rhs
+     */
+    bool operator<=(shell rhs);
+}shell;
+
+
+/**
+ * Supported Timeline types for computing firing timelines.
+ *
+ * These values are used to check if there is a delay needed between each round
+ * and is to be used and compute timelines
+ * based on which one is chosen.
+ */
+typedef enum timelineType
+{
+    ///Continuous timeline - shells one after another
+    CONTINUOUS,
+    ///Interrupted timeline - shells have a delay between firing
+    INTERRUPTED
+}timelineType;
+
+/**
+ * Represents a range of values to fire under, based on TOT as 0.
+ *
+ * These are integer values that represent the + or - that the firing is to occur.
+ * For example, if TOT is 15, range of -1 to +2, firing would occur from 14 to 16
+ */
+typedef struct fireRange
+{
+    ///Represents the offset of the starting minute based on the TOT
+    int startMin;
+    ///Represents the offset of the ending minute based on the TOT
+    int endMin;
+}fireRange;
 
 
 #endif

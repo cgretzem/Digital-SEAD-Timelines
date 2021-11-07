@@ -18,17 +18,7 @@ Sexagesimal::Sexagesimal(int hours, int minutes, int seconds)
     day = 0;
 }
 
-int Sexagesimal::getDay()
-{
-    return day;
-}
-
-void Sexagesimal::setDay(int newDay)
-{
-    day = newDay;
-}
-
-static Sexagesimal convertToBase60(int totalSeconds)
+Sexagesimal convertToBase60(int totalSeconds)
 {
     //if seconds are negative, turn back the clock to end of last day, ie -5 would be 23:59:55
     int negDays = 0;
@@ -42,29 +32,9 @@ static Sexagesimal convertToBase60(int totalSeconds)
     int minutes = (totalSeconds%3600)/60;
     int seconds = (totalSeconds%3600)%60;
     Sexagesimal output = Sexagesimal(hours, minutes, seconds);
-    output.setDay((hours/24) - negDays);
+    output.day = ((hours/24) - negDays);
     hours = (hours %24);
     return output;
-}
-
-int Sexagesimal::getTotalSeconds()
-{
-    return totalSeconds;
-}
-
-int Sexagesimal::getHours()
-{
-    return hours;
-}
-
-int Sexagesimal::getSeconds()
-{
-    return seconds;
-}
-
-int Sexagesimal::getMinutes()
-{
-    return minutes;
 }
 
 
@@ -76,28 +46,20 @@ ostream& operator<<(ostream& os, Sexagesimal sx)
 Sexagesimal Sexagesimal::operator+ (Sexagesimal num)
 {
     //add by adding total seconds of both nums together, then converting back
-    int total = this->totalSeconds + num.getTotalSeconds(); 
+    int total = this->totalSeconds + num.totalSeconds; 
     return convertToBase60(total);
 }
 Sexagesimal Sexagesimal::operator-(Sexagesimal num) 
 {
-    int total = this->totalSeconds - num.getTotalSeconds();
+    int total = this->totalSeconds - num.totalSeconds;
     return convertToBase60(total);
-}
-Sexagesimal Sexagesimal::operator+(int seconds)
-{
-    return convertToBase60(totalSeconds+seconds);
-}
-Sexagesimal Sexagesimal::operator-(int seconds)
-{
-    return convertToBase60(totalSeconds-seconds);
 }
 
 bool operator>(Sexagesimal s1, Sexagesimal s2)
 {
-    if(s1.getDay() > s2.getDay())
+    if(s1.day > s2.day)
         return true;
-    if(s2.getDay() > s1.getDay())
+    if(s2.day > s1.day)
         return false;
     return s1.totalSeconds > s2.totalSeconds;
 }
