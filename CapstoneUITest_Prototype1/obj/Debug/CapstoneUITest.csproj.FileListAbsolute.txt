@@ -1,0 +1,10 @@
+C:\Users\brent\source\repos\CapstoneUITest\bin\Debug\CapstoneUITest.exe.config
+C:\Users\brent\source\repos\CapstoneUITest\bin\Debug\CapstoneUITest.exe
+C:\Users\brent\source\repos\CapstoneUITest\bin\Debug\CapstoneUITest.pdb
+C:\Users\brent\source\repos\CapstoneUITest\obj\Debug\CapstoneUITest.csprojAssemblyReference.cache
+C:\Users\brent\source\repos\CapstoneUITest\obj\Debug\CapstoneUITest.Form1.resources
+C:\Users\brent\source\repos\CapstoneUITest\obj\Debug\CapstoneUITest.Properties.Resources.resources
+C:\Users\brent\source\repos\CapstoneUITest\obj\Debug\CapstoneUITest.csproj.GenerateResource.cache
+C:\Users\brent\source\repos\CapstoneUITest\obj\Debug\CapstoneUITest.csproj.CoreCompileInputs.cache
+C:\Users\brent\source\repos\CapstoneUITest\obj\Debug\CapstoneUITest.exe
+C:\Users\brent\source\repos\CapstoneUITest\obj\Debug\CapstoneUITest.pdb
