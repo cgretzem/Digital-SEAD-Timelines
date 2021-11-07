@@ -32,7 +32,40 @@ typedef struct shell
     Sexagesimal fireTime;
     ///Ff round is marking or HE
     bool isHE;
-    //overloading the greater than operator so we can sort shells by time.
+     /**
+     * == Operator overload for shells
+     * 
+     * @return true if shell == rhs
+     */
+    bool operator==(shell rhs);
+
+    /**
+     * > Operator overload for shells
+     * 
+     * @return true if shell > rhs
+     */
+    bool operator>(shell rhs);
+
+    /**
+     * < Operator overload for shells
+     * 
+     * @return true if shell < rhs
+     */
+    bool operator<(shell rhs);
+
+    /**
+     * >= Operator overload for shells
+     * 
+     * @return true if shell >= rhs
+     */
+    bool operator>=(shell rhs);
+
+    /**
+     * <= Operator overload for shells
+     * 
+     * @return true if shell <= rhs
+     */
+    bool operator<=(shell rhs);
 }shell;
 
 
@@ -80,6 +113,11 @@ class Timeline
         int startTime;
         int timeOnTarget;
         int timeOfFlight; /// How long the shell is in the air (seconds)
+
+        /**
+         * Sorts the timelist by fireTime of shells.
+         */
+        void sortTimeList();
 
     public:
         /**
@@ -132,8 +170,6 @@ class Timeline
          */
         std::vector<shell> getTimeList();
 
-        
-
         /**
          * Getter method for Time on Target.
          * 
@@ -147,17 +183,6 @@ class Timeline
          * @return Time of FLight.
          */
         int getTOF();
-
-        
-        /**
-         * Outstream method for using cout with the timeline.
-         * 
-         * @param os the outstream that the formatted data will be sent to.
-         * 
-         * @param tl the timeline to be sent out.
-         */
-        friend ostream& operator<<(ostream& os, Timeline tl);
-
 
         /**
          * Method for formatting the firing times in a readable way.
