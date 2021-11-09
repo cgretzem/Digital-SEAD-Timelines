@@ -18,6 +18,7 @@ public:
     ~MainWindow();
 
 private slots:
+
     void on_fireTypeSelector_currentIndexChanged(int index);
 
     void on_AddFiringRangeButton_clicked();
@@ -28,5 +29,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
+    int numFiringRangesAdded;
 };
 #endif // MAINWINDOW_H

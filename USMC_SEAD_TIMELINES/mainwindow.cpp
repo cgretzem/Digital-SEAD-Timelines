@@ -42,6 +42,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->input_5->hide();
     ui->MarkingSelector->hide();
     ui->TimelineDisplay->hide();
+
+    //initialize globals
+    numFiringRangesAdded = 0;
 }
 
 MainWindow::~MainWindow()
@@ -116,6 +119,10 @@ void MainWindow::on_fireTypeSelector_currentIndexChanged(int index)
 
             //set intial text for firing range display
             ui->FiringRangesDisplay->setText("Firing Ranges:");
+
+            //reset firing ranges list
+            numFiringRangesAdded = 0;
+
             break;
     }
 }
@@ -129,6 +136,7 @@ void MainWindow::on_AddFiringRangeButton_clicked()
     if(isInt(input_4)){ //verify that the value to be inputted is an int
         ui->FiringRangesDisplay->setText(ui->FiringRangesDisplay->toPlainText() + "\n - " + ui->input_4->text());
         ui->input_4->clear();   //firing range inputted, clear the text box
+        numFiringRangesAdded++;
     }
     else{
         ui->TimelineDisplay->setTextColor(Qt::red);
@@ -201,6 +209,10 @@ void MainWindow::on_CalculateTimelineButton_clicked()
             if(!isInt(input_3)){
                 errorOccured = true;
                 ui->TimelineDisplay->setText(ui->TimelineDisplay->toPlainText() + "Firing Freq is not a whole number\n");
+            }
+            if(numFiringRangesAdded == 0){
+                errorOccured = true;
+                ui->TimelineDisplay->setText(ui->TimelineDisplay->toPlainText() + "No firing ranges added\n");
             }
             if(!errorOccured){
                 ui->TimelineDisplay->setTextColor(Qt::black);   //errors have been printed, set text color back to black
