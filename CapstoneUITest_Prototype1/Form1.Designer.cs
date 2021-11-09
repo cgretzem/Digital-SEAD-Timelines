@@ -140,6 +140,7 @@
             this.FireFreqIn.Name = "FireFreqIn";
             this.FireFreqIn.Size = new System.Drawing.Size(199, 20);
             this.FireFreqIn.TabIndex = 10;
+            this.FireFreqIn.TextChanged += new System.EventHandler(this.FireFreqIn_TextChanged);
             // 
             // FiringRangesL
             // 

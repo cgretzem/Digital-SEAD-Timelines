@@ -177,7 +177,6 @@ void MainWindow::on_CalculateTimelineButton_clicked()
                 ui->TimelineDisplay->setTextColor(Qt::black);   //errors have been printed, set text color back to black
                 ui->TimelineDisplay->setText(ui->TimelineDisplay->toPlainText() + "example timeline\n");
             }
-
             break;
         }
 
