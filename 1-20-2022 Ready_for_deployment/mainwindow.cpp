@@ -362,6 +362,7 @@ void MainWindow::on_CalculateTimelineButton_clicked()
                 timelineType tt = CONTINUOUS;
                 if(ui->fireTypeSelector->currentIndex() == 1){ tt = INTERRUPTED; }
 
+                if(mt == NEGATIVE){ input_5 = "0"; }
                 //cout << "Standard example 1" << endl;
                 Standard_Timeline t0 = Standard_Timeline(stoi(input_1), stoi(input_2), mt, stoi(input_5), tt);
 
@@ -443,6 +444,8 @@ void MainWindow::on_CalculateTimelineButton_clicked()
                 if(ui->MarkingSelector->currentIndex() == 1){ mt = ILLUM; }
                 else if(ui->MarkingSelector->currentIndex() == 2){ mt = WP; }
 
+                if(mt == NEGATIVE){ input_5 = "0"; }
+                
                 NonStandard_Timeline nST = NonStandard_Timeline(stoi(input_1), stoi(input_2), stoi(input_5), frVec, stoi(input_3));
 
                 for(int num : frVecMark){ nST.addMarkingRound(mt, num); }
