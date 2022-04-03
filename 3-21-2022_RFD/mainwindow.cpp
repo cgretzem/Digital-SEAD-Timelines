@@ -8,6 +8,7 @@
 #include <QColor>
 #include <timeline.h>
 #include <gun.h>
+#include <fstream>
 
 using namespace std;
 
@@ -20,6 +21,51 @@ Gun gun1, gun2, gun3, gun4, gun5, gun6;
 bool clearFields;
 bool errorOccured;
 
+string tLineArry[6];
+string fiName;
+
+QTextBrowser* TimelineDisplayGuns[6];//array of pointers to QTextBrowser objects
+
+struct tLineParam{
+
+string tLineNum;
+string tLineType;
+string casTOT;
+string supTOF;
+string supFF;
+string supFR;
+string mType;
+string mTOF;
+string mAt;
+
+};
+
+tLineParam printInput[6];
+
+void clearPrintInputs(int b){
+
+    printInput[b].tLineNum = "NA";
+
+    printInput[b].tLineType = "NA";
+
+    printInput[b].tLineType = "NA";
+
+    printInput[b].tLineType = "NA";
+
+    printInput[b].casTOT = "NA";
+
+    printInput[b].supTOF = "NA";
+
+    printInput[b].mType = "NA";
+
+    printInput[b].mType = "NA";
+
+    printInput[b].mType = "NA";
+
+    printInput[b].mTOF = "NA";
+}
+
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -28,7 +74,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     //add fire type items into fire selector combo box
     ui->fireTypeSelector->addItem("Continuous");
-    ui->fireTypeSelector->addItem("Interruped");
+    ui->fireTypeSelector->addItem("Interrupted");
     ui->fireTypeSelector->addItem("Non-Standard");
 
     //add marking round types into marking round selector
@@ -37,14 +83,18 @@ MainWindow::MainWindow(QWidget *parent)
     ui->MarkingSelector->addItem("WP");
 
     //have the displays inside the box instead of a text title
-    ui->TimelineDisplayGun1->setText("              Gun 1 Timeline");
-    ui->TimelineDisplayGun2->setText("              Gun 2 Timeline");
-    ui->TimelineDisplayGun3->setText("              Gun 3 Timeline");
-    ui->TimelineDisplayGun4->setText("              Gun 4 Timeline");
-    ui->TimelineDisplayGun5->setText("              Gun 5 Timeline");
-    ui->TimelineDisplayGun6->setText("              Gun 6 Timeline");
 
-    //hide all elements initially
+    TimelineDisplayGuns[0] = ui->TimelineDisplayGun1;
+    TimelineDisplayGuns[1] = ui->TimelineDisplayGun2;
+    TimelineDisplayGuns[2] = ui->TimelineDisplayGun3;
+    TimelineDisplayGuns[3] = ui->TimelineDisplayGun4;
+    TimelineDisplayGuns[4] = ui->TimelineDisplayGun5;
+    TimelineDisplayGuns[5] = ui->TimelineDisplayGun6;
+    for(int i = 1; i < 7; i++){
+        string text = "              Gun " + to_string(i) + " Timeline";
+        TimelineDisplayGuns[i-1]->setText(QString(text.c_str()));
+    }
+        //hide all elements initially
     ui->AddFiringRangeButton->hide();
     ui->FiringRangesLabel_2->hide();
     ui->FiringRangesDisplay->hide();
@@ -224,6 +274,99 @@ void MainWindow::on_fireTypeSelector_currentIndexChanged(int index)
     //clearFields = true;
 }
 
+//event handler for when the user clicks the save file button
+void MainWindow::on_fileNameButton_clicked()
+{
+
+    ui->errorWindow->setTextColor(Qt::red); //set text color to red in case we need to output errors
+    ui->errorWindow->clear();
+    ui->errorWindow->hide();
+    errorOccured = false;
+
+    ofstream myfile;
+
+    fiName = ui->fileNameInput->text().toStdString();
+
+    if(fiName.length() <= 0 || invalidChar(fiName)){
+        errorOccured = true;
+        ui->errorWindow->show();
+        ui->errorWindow->setText(ui->errorWindow->toPlainText() + "ERROR: Add File Name\n");
+
+    }
+    else if(!invalidChar2(fiName)){
+        errorOccured = true;
+        ui->errorWindow->show();
+        ui->errorWindow->setText(ui->errorWindow->toPlainText() + "ERROR: File Name has Invalid Characters");
+
+    }
+
+    if(!errorOccured){
+        ui->errorWindow->setTextColor(Qt::black);   //errors have been printed, set text color back to black
+        ui->errorWindow->clear();
+        ui->errorWindow->hide();
+        errorOccured = false;
+
+        string path = "C:\\Users\\";
+        path += getenv("USERNAME");
+        path += "\\Desktop\\";
+        path += fiName;
+        path += ".txt";
+        ofstream { path };
+        myfile.open(path);
+
+        for(int i = 0; i < 6; i++){
+            string pRam = "\n";
+
+            pRam += "CAS TOT = ";
+            pRam += printInput[i].casTOT;
+            pRam += " ";
+
+            pRam += "Sup TOF = ";
+            pRam += printInput[i].supTOF;
+            pRam += " ";
+
+            pRam += "Mark Type = ";
+            pRam += printInput[i].mType;
+            pRam += " ";
+
+            if(printInput[i].mType == "NEGATIVE"){ printInput[i].mTOF = "NA"; }
+            pRam += "Mark TOF = ";
+            pRam += printInput[i].mTOF;
+
+            if(printInput[i].tLineType == "Non-Standard"){
+
+            pRam += " ";
+            pRam += "Sup FF = ";
+            pRam += printInput[i].supFF;
+            pRam += "\n";
+
+            pRam += "Sup FR = ";
+            pRam += printInput[i].supFR;
+            pRam += "\n";
+
+            if(printInput[i].mType == "NEGATIVE"){ printInput[i].mAt = "NA"; }
+            pRam += "Mark At = ";
+            pRam += printInput[i].mAt;
+
+
+            }
+
+
+            myfile << printInput[i].tLineNum;
+            myfile << "\n";
+            myfile << pRam;
+            myfile << "\n\n";
+            myfile << tLineArry[i];
+            myfile << "\n\n";
+    }
+
+        myfile.close();
+        ui->fileNameInput->clear();
+        fiName = "NA";
+
+   }
+}
+
 //event handler for when the user clicks on the add firing range button
 void MainWindow::on_AddFiringRangeButton_clicked()
 {
@@ -240,12 +383,12 @@ void MainWindow::on_AddFiringRangeButton_clicked()
     if(!invalidChar(input_6)){
         errorOccured = true;
         ui->errorWindow->show();
-        ui->errorWindow->setText(ui->errorWindow->toPlainText() + "Suppression Range 1st entry has invalid characters\n");
+        ui->errorWindow->setText(ui->errorWindow->toPlainText() + "ERROR: Suppression Range 1st entry has invalid characters\n");
     }
-    else if(!invalidChar(input_7)){
+    if(!invalidChar(input_7)){
         errorOccured = true;
         ui->errorWindow->show();
-        ui->errorWindow->setText(ui->errorWindow->toPlainText() + "Suppression Range 2nd entry has invalid characters\n");
+        ui->errorWindow->setText(ui->errorWindow->toPlainText() + "ERROR: Suppression Range 2nd entry has invalid characters\n");
     }
     else if(isInt(input_6) && isInt(input_7)){ //verify that the value to be inputted is an int
 
@@ -264,7 +407,7 @@ void MainWindow::on_AddFiringRangeButton_clicked()
     else{
         ui->errorWindow->show();
         ui->errorWindow->setTextColor(Qt::red);
-        ui->errorWindow->setText(ui->errorWindow->toPlainText() + "Firing ranges are not whole numbers\n");
+        ui->errorWindow->setText(ui->errorWindow->toPlainText() + "ERROR: Firing ranges are not whole numbers\n");
     }
 
 }
@@ -302,7 +445,7 @@ void MainWindow::on_AddMarkingRangeButton_clicked()
     if(!invalidChar(input_8)){
         errorOccured = true;
         ui->errorWindow->show();
-        ui->errorWindow->setText(ui->errorWindow->toPlainText() + "Mark At has invalid characters\n");
+        ui->errorWindow->setText(ui->errorWindow->toPlainText() + "ERROR: Mark At has invalid characters\n");
     }
 
     else if(isInt(input_8)){ //verify that the value to be inputted is an int
@@ -321,7 +464,7 @@ void MainWindow::on_AddMarkingRangeButton_clicked()
     else{
         ui->errorWindow->show();
         ui->errorWindow->setTextColor(Qt::red);
-        ui->errorWindow->setText(ui->errorWindow->toPlainText() + "Marking range is not a whole number\n");
+        ui->errorWindow->setText(ui->errorWindow->toPlainText() + "ERROR: Marking range is not a whole number\n");
     }
 
 }
@@ -345,48 +488,93 @@ void MainWindow::on_RemoveRangeButton_2Mark_clicked()
      ui->MarkingRangesDisplay->setText("Mark With:");
 }
 
+//check if any errors exist before we attempt to calculate timeline.
+bool MainWindow::CalculateTimelineErrors(int timelineType, string *inputs){
+    //timeline types: 0 == continuous, 1 == interrupted(standard), 2 == non-standard
+    bool errorOccurred = false;//if we encounter an error, this will later be set to true
+
+    string CAS_TOT = inputs[0];//CAS TOT value
+    string Supp_TOF = inputs[1];//Supp TOF value
+    string Supp_Fire_Freq = inputs[2];//Supp Fire Freq value
+    string Marking_TOF = inputs[3];//Marking TOF value
+    string Supp_Firing_Range_lower = inputs[4];//Supp Firing range (lower value)
+    string Supp_Firing_Range_upper = inputs[5];//Supp Firing range (upper value)
+    string Mark_At = inputs[6];//'Mark at' value
+
+    //verify each input for empty value, or non-int value
+    ui->errorWindow->setTextColor(Qt::red); //set text color to red in case we need to output errors
+    ui->errorWindow->clear();
+    ui->errorWindow->hide();
+
+    if(!isInt(CAS_TOT)){//is CAS_TOT an integer?
+        errorOccurred = true;
+        ui->errorWindow->setText(ui->errorWindow->toPlainText() + "ERROR: TOT is not a whole number\n");
+    }
+    if(!invalidChar(CAS_TOT)){//does CAS_TOT contain an invalid character?
+        errorOccurred = true;
+        ui->errorWindow->setText(ui->errorWindow->toPlainText() + "ERROR: TOT contains invalid characters\n");
+    }
+    if(!isInt(Supp_TOF)){//is Supp_TOF an integer?
+        errorOccurred = true;
+        ui->errorWindow->setText(ui->errorWindow->toPlainText() + "ERROR: TOF is not a whole number\n");
+    }
+    if(!invalidChar(Supp_TOF)){//does Supp_TOF contain an invalid character?
+        errorOccurred = true;
+        ui->errorWindow->setText(ui->errorWindow->toPlainText() + "ERROR: TOF contains invalid characters\n");
+    }
+    if(!isInt(Supp_Fire_Freq) && (timelineType == 2)){//non-standard only
+        errorOccurred = true;
+        ui->errorWindow->setText(ui->errorWindow->toPlainText() + "ERROR: Fire Frequency is not a whole number\n");
+    }
+    if(!invalidChar(Supp_Fire_Freq) && (timelineType == 2)){//non-standard only
+        errorOccurred = true;
+        ui->errorWindow->setText(ui->errorWindow->toPlainText() + "ERROR: Fire Frequency contains invalid characters\n");
+    }
+    if(!isInt(Marking_TOF)){
+        errorOccurred = true;
+        ui->errorWindow->setText(ui->errorWindow->toPlainText() + "ERROR: Marking TOF is not a whole number\n");
+    }
+    if(!invalidChar(Marking_TOF)){
+        errorOccurred = true;
+        ui->errorWindow->setText(ui->errorWindow->toPlainText() + "ERROR: Marking TOF contains invalid characters\n");
+    }
+    if(ui->MarkingSelector->currentIndex() == -1){//is marking shell selected?
+        errorOccurred = true;
+        ui->errorWindow->setText(ui->errorWindow->toPlainText() + "ERROR: Marking shell is not selected\n");
+    }
+    if(frVec.empty() && (timelineType == 2)){//non-standard only
+        errorOccurred = true;
+        ui->errorWindow->setText(ui->errorWindow->toPlainText() + "ERROR: Add Suppress Range\n");
+    }
+    if(frVecMark.empty() && (ui->MarkingSelector->currentIndex() != 0) && (timelineType == 2)){//non-standard only
+        errorOccurred = true;
+        ui->errorWindow->setText(ui->errorWindow->toPlainText() + "ERROR: Add Marking Range\n");
+    }
+
+    //if an error occurred, make error window visible to show messages
+    if(errorOccurred)
+        ui->errorWindow->show();
+    return errorOccurred;
+}
+
 //event handler for when the calculate timeline button is clicked
 //must either display a valid timeline, or return an error message
 void MainWindow::on_CalculateTimelineButton_clicked()
 {
     //we must first determine which firing mode is selected, so we can do input verification on the correct input boxes
+    string inputs[7];//these will hold the inputs to pass them as parameter more easily
+    inputs[0] = ui->input_1->text().toStdString();//CAS TOT
+    inputs[1] = ui->input_2->text().toStdString();//Supp TOF
+    inputs[2] = ui->input_3->text().toStdString();//Supp Fire Freq
+    inputs[3] = ui->input_5->text().toStdString();//Marking TOF
+    inputs[4] = ui->input_6->text().toStdString();//Supp Firing range (lower)
+    inputs[5] = ui->input_7->text().toStdString();//Supp firing range (upper)
+    inputs[6] = ui->input_8->text().toStdString();//'Mark at'
+    errorOccured = CalculateTimelineErrors(ui->fireTypeSelector->currentIndex(), inputs);
     switch(ui->fireTypeSelector->currentIndex()){
         //continuous and interrupted (standard)
-        //verify <input_1> <input_2> <MarkingSelector> <input_5>
         case 0: case 1:{
-            //convert all inputs to strings
-            string input_1 = ui->input_1->text().toStdString();
-            string input_2 = ui->input_2->text().toStdString();
-            string input_5 = ui->input_5->text().toStdString();
-
-            //verify each input for empty value, or non-int value
-            ui->errorWindow->setTextColor(Qt::red); //set text color to red in case we need to output errors
-            ui->errorWindow->clear();
-            ui->errorWindow->hide();
-            errorOccured = false;
-
-            if(!isInt(input_1)){
-                errorOccured = true;
-                ui->errorWindow->show();
-                ui->errorWindow->setText(ui->errorWindow->toPlainText() + "TOT is not a whole number\n");
-            }
-            if(!isInt(input_2)){
-                errorOccured = true;
-                ui->errorWindow->show();
-                ui->errorWindow->setText(ui->errorWindow->toPlainText() + "TOF is not a whole number\n");
-            }
-            if(!isInt(input_5) && ui->MarkingSelector->currentIndex() > 0){
-                errorOccured = true;
-                ui->errorWindow->show();
-                ui->errorWindow->setText(ui->errorWindow->toPlainText() + "Marking TOF is not a whole number\n");
-            }
-            if(ui->MarkingSelector->currentIndex() == -1){
-                errorOccured = true;
-                ui->errorWindow->show();
-                ui->errorWindow->setText(ui->errorWindow->toPlainText() + "Marking shell is not selected\n");
-            }
             if(!errorOccured){
-
                 ui->errorWindow->setTextColor(Qt::black);   //errors have been printed, set text color back to black
                 ui->errorWindow->clear();
                 ui->errorWindow->hide();
@@ -400,10 +588,12 @@ void MainWindow::on_CalculateTimelineButton_clicked()
                 timelineType tt = CONTINUOUS;
                 if(ui->fireTypeSelector->currentIndex() == 1){ tt = INTERRUPTED; }
 
-                if(mt == NEGATIVE){ input_5 = "0"; }
+                //if(mt == NEGATIVE){ input_5 = "0"; }
+                if(mt == NEGATIVE){ inputs[3] = "0"; }//set Supp_Fire_Freq to 0
 
                 //cout << "Standard example 1" << endl;
-                Standard_Timeline t0 = Standard_Timeline(stoi(input_1), stoi(input_2), mt, stoi(input_5), tt);
+                //Standard_Timeline t0 = Standard_Timeline(stoi(input_1), stoi(input_2), mt, stoi(input_5), tt);
+                Standard_Timeline t0 = Standard_Timeline(stoi(inputs[0]), stoi(inputs[1]), mt, stoi(inputs[3]), tt);//CAS_TOT, Supp_TOF, Marking_TOF
 
                 string testLine = t0.print();
                 char test[testLine.size()+1];
@@ -411,95 +601,54 @@ void MainWindow::on_CalculateTimelineButton_clicked()
                 test[testLine.size()] = '\0';
                 QString x = test;
 
-                if(currentGun == &gun1){ui->TimelineDisplayGun1->clear(); ui->TimelineDisplayGun1->setText("              Gun 1 Timeline\n\n"); ui->TimelineDisplayGun1->setText(ui->TimelineDisplayGun1->toPlainText() + x); }
-                else if (currentGun == &gun2){ ui->TimelineDisplayGun2->clear(); ui->TimelineDisplayGun2->setText("              Gun 2 Timeline\n\n"); ui->TimelineDisplayGun2->setText(ui->TimelineDisplayGun2->toPlainText() + x); }
-                else if (currentGun == &gun3){ ui->TimelineDisplayGun3->clear(); ui->TimelineDisplayGun3->setText("              Gun 3 Timeline\n\n"); ui->TimelineDisplayGun3->setText(ui->TimelineDisplayGun3->toPlainText() + x); }
-                else if (currentGun == &gun4){ ui->TimelineDisplayGun4->clear(); ui->TimelineDisplayGun4->setText("              Gun 4 Timeline\n\n"); ui->TimelineDisplayGun4->setText(ui->TimelineDisplayGun4->toPlainText() + x); }
-                else if (currentGun == &gun5){ ui->TimelineDisplayGun5->clear(); ui->TimelineDisplayGun5->setText("              Gun 5 Timeline\n\n"); ui->TimelineDisplayGun5->setText(ui->TimelineDisplayGun5->toPlainText() + x); }
-                else { ui->TimelineDisplayGun6->clear(); ui->TimelineDisplayGun6->setText("              Gun 6 Timeline\n\n"); ui->TimelineDisplayGun6->setText(ui->TimelineDisplayGun6->toPlainText() + x); }
+                int gunIndex = 0;//will hold the index of our gun
+                if(currentGun == &gun1)
+                    gunIndex = 0;
+                else if(currentGun == &gun2)
+                    gunIndex = 1;
+                else if(currentGun == &gun3)
+                    gunIndex = 2;
+                else if (currentGun == &gun4)
+                    gunIndex = 3;
+                else if(currentGun == &gun5)
+                    gunIndex = 4;
+                else if(currentGun == &gun6)
+                    gunIndex = 5;
+                //gunIndex tells us which timeline window we should write into
+                TimelineDisplayGuns[gunIndex]->clear();//clear any previous output
+                string text = "              Gun " + to_string(gunIndex+1) + " Timeline\n\n";
+                TimelineDisplayGuns[gunIndex]->setText(text.c_str() + x);//write our content to the QTextBrowser
+                //tLineArray[gunIndex] = TimelineDisplayGuns[gunIndex]->toPlainText().toStdString();
+                if(tt == CONTINUOUS){
+                    printInput[gunIndex].tLineType = "Continuous";
+                }else if(tt == INTERRUPTED){
+                    printInput[gunIndex].tLineType = "Interrupted";
+                }else{
+                    printInput[gunIndex].tLineType = "NEGATIVE";
+                }
+
+                printInput[gunIndex].casTOT = ui->input_1->text().toStdString();
+
+                printInput[gunIndex].supTOF = ui->input_2->text().toStdString();
+
+                if(mt == WP){
+                    printInput[gunIndex].mType = "WP";
+                }else if(mt == ILLUM){
+                    printInput[gunIndex].mType = "ILLUM";
+                }else{
+                    printInput[gunIndex].mType = "NEGATIVE";
+                }
+
+                printInput[gunIndex].mTOF = ui->input_5->text().toStdString();
+
+                printInput[gunIndex].tLineNum = "              Gun " + to_string(gunIndex+1) + " Timeline ";
+                printInput[gunIndex].tLineNum += printInput[gunIndex].tLineType;
+                //tLineArry[0] += "\n\n";
+                tLineArry[gunIndex] += x.toStdString();
             }
             break;
         }
-
-        //non-standard, needs to verify <input_1> <input_2> <input_3>
-        //<input_4> is verified as the add button is clicked
-        case 2:
-            //convert all inputs to strings
-            string input_1 = ui->input_1->text().toStdString();
-            string input_2 = ui->input_2->text().toStdString();
-            string input_3 = ui->input_3->text().toStdString();
-            string input_5 = ui->input_5->text().toStdString();
-            string input_6 = ui->input_6->text().toStdString();
-            string input_7 = ui->input_7->text().toStdString();
-            string input_8 = ui->input_8->text().toStdString();
-
-            ui->errorWindow->clear();
-            ui->errorWindow->hide();
-            errorOccured = false;
-
-            //verify each input for empty value, or non-int value
-            ui->errorWindow->setTextColor(Qt::red); //set text color to red in case we need to output errors
-            if(!isInt(input_1)){
-                errorOccured = true;
-                ui->errorWindow->show();
-                ui->errorWindow->setText(ui->errorWindow->toPlainText() + "TOT is not a whole number\n");
-            }
-            if(!invalidChar(input_1)){
-                errorOccured = true;
-                ui->errorWindow->show();
-                ui->errorWindow->setText(ui->errorWindow->toPlainText() + "TOT has invalid characters\n");
-            }
-
-            if(!isInt(input_2)){
-                errorOccured = true;
-                ui->errorWindow->show();
-                ui->errorWindow->setText(ui->errorWindow->toPlainText() + "TOF is not a whole number\n");
-            }
-            if(!invalidChar(input_2)){
-                errorOccured = true;
-                ui->errorWindow->show();
-                ui->errorWindow->setText(ui->errorWindow->toPlainText() + "TOF has invalid characters\n");
-            }
-
-            if(!isInt(input_3)){
-                errorOccured = true;
-                ui->errorWindow->show();
-                ui->errorWindow->setText(ui->errorWindow->toPlainText() + "Fire Frequency is not a whole number\n");
-            }
-            if(!invalidChar(input_3)){
-                errorOccured = true;
-                ui->errorWindow->show();
-                ui->errorWindow->setText(ui->errorWindow->toPlainText() + "Fire Frequency has invalid characters\n");
-            }
-
-            if(!isInt(input_5) && ui->MarkingSelector->currentIndex() > 0){
-                errorOccured = true;
-                ui->errorWindow->show();
-                ui->errorWindow->setText(ui->errorWindow->toPlainText() + "Marking TOF is not a whole number\n");
-            }
-            if(!invalidChar(input_5) && ui->MarkingSelector->currentIndex() > 0){
-                errorOccured = true;
-                ui->errorWindow->show();
-                ui->errorWindow->setText(ui->errorWindow->toPlainText() + "Marking TOF has invalid characters\n");
-            }
-
-
-            if(ui->MarkingSelector->currentIndex() == -1){
-                errorOccured = true;
-                ui->errorWindow->show();
-                ui->errorWindow->setText(ui->errorWindow->toPlainText() + "Marking shell is not selected\n");
-            }
-            if(frVec.empty()){
-                errorOccured = true;
-                ui->errorWindow->show();
-                ui->errorWindow->setText(ui->errorWindow->toPlainText() + "Add Suppress Range\n");
-            }
-            if(frVecMark.empty() && ui->MarkingSelector->currentIndex() != 0){
-                errorOccured = true;
-                ui->errorWindow->show();
-                ui->errorWindow->setText(ui->errorWindow->toPlainText() + "Add Marking Range\n");
-            }
-
+        case 2://non-standard timeline
             if(!errorOccured){
                 ui->errorWindow->setTextColor(Qt::black);   //errors have been printed, set text color back to black
                 ui->errorWindow->clear();
@@ -511,9 +660,11 @@ void MainWindow::on_CalculateTimelineButton_clicked()
                 if(ui->MarkingSelector->currentIndex() == 1){ mt = ILLUM; }
                 else if(ui->MarkingSelector->currentIndex() == 2){ mt = WP; }
 
-                if(mt == NEGATIVE){ input_5 = "0"; }
+                //if(mt == NEGATIVE){ input_5 = "0"; }
+                if(mt == NEGATIVE){ inputs[3] = "0"; }//Marking_TOF
 
-                NonStandard_Timeline nST = NonStandard_Timeline(stoi(input_1), stoi(input_2), stoi(input_5), frVec, stoi(input_3));
+                //NonStandard_Timeline nST = NonStandard_Timeline(stoi(input_1), stoi(input_2), stoi(input_5), frVec, stoi(input_3));
+                NonStandard_Timeline nST = NonStandard_Timeline(stoi(inputs[0]), stoi(inputs[1]), stoi(inputs[3]), frVec, stoi(inputs[2]));//CAS_TOT, Supp_TOF, Marking_TOF, Supp_Fire_Freq
 
                 for(int num : frVecMark){ nST.addMarkingRound(mt, num); }
 
@@ -523,70 +674,128 @@ void MainWindow::on_CalculateTimelineButton_clicked()
                 test[testLine.size()] = '\0';
                 QString x = test;
 
-                if(currentGun == &gun1){ui->TimelineDisplayGun1->clear(); ui->TimelineDisplayGun1->setText("              Gun 1 Timeline\n\n"); ui->TimelineDisplayGun1->setText(ui->TimelineDisplayGun1->toPlainText() + x); }
-                else if (currentGun == &gun2){ ui->TimelineDisplayGun2->clear(); ui->TimelineDisplayGun2->setText("              Gun 2 Timeline\n\n"); ui->TimelineDisplayGun2->setText(ui->TimelineDisplayGun2->toPlainText() + x); }
-                else if (currentGun == &gun3){ ui->TimelineDisplayGun3->clear(); ui->TimelineDisplayGun3->setText("              Gun 3 Timeline\n\n"); ui->TimelineDisplayGun3->setText(ui->TimelineDisplayGun3->toPlainText() + x); }
-                else if (currentGun == &gun4){ ui->TimelineDisplayGun4->clear(); ui->TimelineDisplayGun4->setText("              Gun 4 Timeline\n\n"); ui->TimelineDisplayGun4->setText(ui->TimelineDisplayGun4->toPlainText() + x); }
-                else if (currentGun == &gun5){ ui->TimelineDisplayGun5->clear(); ui->TimelineDisplayGun5->setText("              Gun 5 Timeline\n\n"); ui->TimelineDisplayGun5->setText(ui->TimelineDisplayGun5->toPlainText() + x); }
-                else { ui->TimelineDisplayGun6->clear(); ui->TimelineDisplayGun6->setText("              Gun 6 Timeline\n\n"); ui->TimelineDisplayGun6->setText(ui->TimelineDisplayGun6->toPlainText() + x); }
-            }
+                int gunIndex = 0;
+                if(currentGun == &gun1)
+                    gunIndex = 0;
+                else if(currentGun == &gun2)
+                    gunIndex = 1;
+                else if(currentGun == &gun3)
+                    gunIndex = 2;
+                else if(currentGun == &gun4)
+                    gunIndex = 3;
+                else if(currentGun == &gun5)
+                    gunIndex = 4;
+                else if(currentGun == &gun6)
+                    gunIndex = 5;
+                TimelineDisplayGuns[gunIndex]->clear();
+                string text = "              Gun " + to_string(gunIndex+1) + " Timeline\n\n";
+                TimelineDisplayGuns[gunIndex]->setText(text.c_str() + x );
+                printInput[gunIndex].tLineType = "Non-Standard";
 
+                printInput[gunIndex].casTOT = ui->input_1->text().toStdString();
+
+                printInput[gunIndex].supTOF = ui->input_2->text().toStdString();
+
+                printInput[gunIndex].supFF = ui->input_3->text().toStdString();
+
+                printInput[gunIndex].supFR = "";
+                for(fireRange i : frVec){
+                    printInput[gunIndex].supFR += to_string(i.startMin);
+                    printInput[gunIndex].supFR += ",";
+                    printInput[gunIndex].supFR += to_string(i.endMin);
+                    printInput[gunIndex].supFR += "  ";
+
+                }
+
+                printInput[gunIndex].mAt = "";
+                for(int i : frVecMark){ printInput[gunIndex].mAt += to_string(i); printInput[gunIndex].mAt += " "; }
+
+                if(mt == WP){
+                    printInput[gunIndex].mType = "WP";
+                }else if(mt == ILLUM){
+                    printInput[gunIndex].mType = "ILLUM";
+                }else{
+                    printInput[gunIndex].mType = "NEGATIVE";
+                }
+
+                printInput[gunIndex].mTOF = ui->input_5->text().toStdString();
+
+                printInput[gunIndex].tLineNum = "              Gun 1 Timeline ";
+                printInput[gunIndex].tLineNum += printInput[gunIndex].tLineType;
+
+                //tLineArry[0] += "\n\n";
+                tLineArry[gunIndex] += x.toStdString();
+                tLineArry[gunIndex] += "\n";
+            }//end if(!errorOccurred)
             break;
     }
 }
 
 
+void MainWindow::selectGun(int index){
+    switch(index){
+        case 1:
+            currentGun = &gun1;
+        break;
+        case 2:
+            currentGun = &gun2;
+        break;
+        case 3:
+            currentGun = &gun3;
+        break;
+        case 4:
+            currentGun = &gun4;
+        break;
+        case 5:
+            currentGun = &gun5;
+        break;
+        case 6:
+            currentGun = &gun6;
+        break;
+    }
+    ui->errorWindow->clear();
+    ui->errorWindow->hide();
+}
+
 //gun 1 is selected, load all gun 1 data into the displays
 void MainWindow::on_Gun_1_button_clicked()
 {
-    currentGun = &gun1;
-    ui->errorWindow->clear();
-    ui->errorWindow->hide();
+    selectGun(1);
     //setNewData();
 }
 
 //gun 2 is selected, load all gun 2 data into the displays
 void MainWindow::on_Gun_2_button_clicked()
 {
-    currentGun = &gun2;
-    ui->errorWindow->clear();
-    ui->errorWindow->hide();
+    selectGun(2);
     //setNewData();
 }
 
 //gun 3 is selected, load all gun 3 data into the displays
 void MainWindow::on_Gun_3_button_clicked()
 {
-    currentGun = &gun3;
-    ui->errorWindow->clear();
-    ui->errorWindow->hide();
+    selectGun(3);
     //setNewData();
 }
 
 //gun 4 is selected, load all gun 4 data into the displays
 void MainWindow::on_Gun_4_button_clicked()
 {
-    currentGun = &gun4;
-    ui->errorWindow->clear();
-    ui->errorWindow->hide();
+    selectGun(4);
     //setNewData();
 }
 
 //gun 5 is selected, load all gun 5 data into the displays
 void MainWindow::on_Gun_5_button_clicked()
 {
-    currentGun = &gun5;
-    ui->errorWindow->clear();
-    ui->errorWindow->hide();
+    selectGun(5);
     //setNewData();
 }
 
 //gun 6 is selected, load all gun 6 data into the displays
 void MainWindow::on_Gun_6_button_clicked()
 {
-    currentGun = &gun6;
-    ui->errorWindow->clear();
-    ui->errorWindow->hide();
+    selectGun(6);
     //setNewData();
 }
 
@@ -629,31 +838,32 @@ void MainWindow::on_clearButton_clicked(){
     ui->input_7->clear();
     ui->input_8->clear();
 
+    ui->fileNameInput->clear();
+
     frVec.clear();
     frVecMark.clear();
+}
+
+//handles clearing a singular timeline window and its associated data
+void MainWindow::ClearTimeline(int index){
+    TimelineDisplayGuns[index]->clear();
+    string text = "              Gun " + to_string(index+1) + " Timeline";
+    TimelineDisplayGuns[index]->setText(text.c_str());
+    tLineArry[index] = "NA";
+    clearPrintInputs(index);
 }
 
 void MainWindow::on_clearButtonGuns_clicked(){
     ui->errorWindow->clear();
     ui->errorWindow->hide();
 
-    ui->TimelineDisplayGun1->clear();
-    ui->TimelineDisplayGun1->setText("              Gun 1 Timeline");
+    ui->fileNameInput->clear();
+    fiName = "NA";
 
-    ui->TimelineDisplayGun2->clear();
-    ui->TimelineDisplayGun2->setText("              Gun 2 Timeline");
+    for(int i = 0; i < 6; i++){
+        ClearTimeline(i);
+    }
 
-    ui->TimelineDisplayGun3->clear();
-    ui->TimelineDisplayGun3->setText("              Gun 3 Timeline");
-
-    ui->TimelineDisplayGun4->clear();
-    ui->TimelineDisplayGun4->setText("              Gun 4 Timeline");
-
-    ui->TimelineDisplayGun5->clear();
-    ui->TimelineDisplayGun5->setText("              Gun 5 Timeline");
-
-    ui->TimelineDisplayGun6->clear();
-    ui->TimelineDisplayGun6->setText("              Gun 6 Timeline");
 }
 
 bool MainWindow::isInt(string input){ try{ stoi(input); } catch (...) { return false; } return true; }
@@ -674,6 +884,25 @@ bool MainWindow::invalidChar(string input2){
 
         if(!isInt(test)){ return false; }
 
+    }
+
+    return true;
+
+}
+
+bool MainWindow::invalidChar2(string input3){
+
+    int s2 = input3.length();
+
+    for(int i = 0; i < s2; i++){
+
+        if(input3[i] == '\\'
+                || input3[i] == '/'
+                || input3[i] == ':'
+                || input3[i] == '<'
+                || input3[i] == '>'
+                || input3[i] == '"'
+                || input3[i] == '<'){ return false; }
     }
 
     return true;
@@ -730,46 +959,38 @@ void MainWindow::on_RemoveSingleMarking_clicked()
     }
 }
 
-
 void MainWindow::on_ClearTimeline1_clicked()
 {
-    ui->TimelineDisplayGun1->clear();
-    ui->TimelineDisplayGun1->setText("              Gun 1 Timeline");
-
+    ClearTimeline(0);
 }
 
 
 void MainWindow::on_ClearTimeline2_clicked()
 {
-    ui->TimelineDisplayGun2->clear();
-    ui->TimelineDisplayGun2->setText("              Gun 2 Timeline");
+    ClearTimeline(1);
 }
 
 
 void MainWindow::on_ClearTimeline3_clicked()
 {
-    ui->TimelineDisplayGun3->clear();
-    ui->TimelineDisplayGun3->setText("              Gun 3 Timeline");
+    ClearTimeline(2);
 }
 
 
 void MainWindow::on_ClearTimeline4_clicked()
 {
-    ui->TimelineDisplayGun4->clear();
-    ui->TimelineDisplayGun4->setText("              Gun 4 Timeline");
+    ClearTimeline(3);
 }
 
 
 void MainWindow::on_ClearTimeline5_clicked()
 {
-    ui->TimelineDisplayGun5->clear();
-    ui->TimelineDisplayGun5->setText("              Gun 5 Timeline");
+    ClearTimeline(4);
 }
 
 
 void MainWindow::on_ClearTimeline6_clicked()
 {
-    ui->TimelineDisplayGun6->clear();
-    ui->TimelineDisplayGun6->setText("              Gun 6 Timeline");
+    ClearTimeline(5);
 }
 

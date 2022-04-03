@@ -259,7 +259,7 @@
              </layout>
             </item>
             <item>
-             <layout class="QVBoxLayout" name="verticalLayout_7" stretch="1,1,0">
+             <layout class="QVBoxLayout" name="verticalLayout_7" stretch="0,0,0">
               <property name="spacing">
                <number>6</number>
               </property>
@@ -297,7 +297,7 @@
                 <property name="sizeHint" stdset="0">
                  <size>
                   <width>20</width>
-                  <height>20</height>
+                  <height>40</height>
                  </size>
                 </property>
                </spacer>
@@ -380,7 +380,7 @@
              </layout>
             </item>
             <item>
-             <spacer name="verticalSpacer_4">
+             <spacer name="verticalSpacer_5">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>
@@ -732,8 +732,15 @@
         <property name="bottomMargin">
          <number>0</number>
         </property>
-        <item row="3" column="0">
-         <widget class="QTextBrowser" name="TimelineDisplayGun4">
+        <item row="2" column="2">
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_9"/>
+          </item>
+         </layout>
+        </item>
+        <item row="6" column="3">
+         <widget class="QTextBrowser" name="TimelineDisplayGun6">
           <property name="font">
            <font>
             <family>Consolas</family>
@@ -742,7 +749,17 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
+        <item row="5" column="0">
+         <widget class="QTextBrowser" name="TimelineDisplayGun1">
+          <property name="font">
+           <font>
+            <family>Consolas</family>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
          <widget class="QPushButton" name="CalculateTimelineButton">
           <property name="font">
            <font>
@@ -761,10 +778,10 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="1">
-         <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item row="7" column="3">
+         <layout class="QHBoxLayout" name="horizontalLayout_7">
           <item>
-           <widget class="QPushButton" name="clearButton">
+           <widget class="QPushButton" name="ClearTimeline5">
             <property name="font">
              <font>
               <family>Consolas</family>
@@ -772,15 +789,12 @@
              </font>
             </property>
             <property name="text">
-             <string>Clear All Inputs</string>
-            </property>
-            <property name="autoDefault">
-             <bool>true</bool>
+             <string>Clear Timeline 5</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="clearButtonGuns">
+           <widget class="QPushButton" name="ClearTimeline6">
             <property name="font">
              <font>
               <family>Consolas</family>
@@ -788,36 +802,13 @@
              </font>
             </property>
             <property name="text">
-             <string>Clear Timelines</string>
-            </property>
-            <property name="autoDefault">
-             <bool>true</bool>
+             <string>Clear Timeline 6</string>
             </property>
            </widget>
           </item>
          </layout>
         </item>
-        <item row="2" column="2">
-         <widget class="QTextBrowser" name="TimelineDisplayGun3">
-          <property name="font">
-           <font>
-            <family>Consolas</family>
-            <pointsize>12</pointsize>
-           </font>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QTextBrowser" name="TimelineDisplayGun1">
-          <property name="font">
-           <font>
-            <family>Consolas</family>
-            <pointsize>12</pointsize>
-           </font>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
+        <item row="5" column="2">
          <widget class="QTextBrowser" name="TimelineDisplayGun2">
           <property name="font">
            <font>
@@ -827,7 +818,7 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="1">
+        <item row="6" column="2">
          <widget class="QTextBrowser" name="TimelineDisplayGun5">
           <property name="font">
            <font>
@@ -837,8 +828,8 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="2">
-         <widget class="QTextBrowser" name="TimelineDisplayGun6">
+        <item row="5" column="3">
+         <widget class="QTextBrowser" name="TimelineDisplayGun3">
           <property name="font">
            <font>
             <family>Consolas</family>
@@ -847,7 +838,47 @@
           </property>
          </widget>
         </item>
-        <item row="4" column="1">
+        <item row="7" column="0">
+         <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <item>
+           <widget class="QPushButton" name="ClearTimeline1">
+            <property name="font">
+             <font>
+              <family>Consolas</family>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Clear Timeline 1</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="ClearTimeline2">
+            <property name="font">
+             <font>
+              <family>Consolas</family>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Clear Timeline 2</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="6" column="0">
+         <widget class="QTextBrowser" name="TimelineDisplayGun4">
+          <property name="font">
+           <font>
+            <family>Consolas</family>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="2">
          <layout class="QHBoxLayout" name="horizontalLayout">
           <property name="bottomMargin">
            <number>0</number>
@@ -880,10 +911,10 @@
           </item>
          </layout>
         </item>
-        <item row="4" column="0">
-         <layout class="QHBoxLayout" name="horizontalLayout_6">
+        <item row="1" column="2">
+         <layout class="QHBoxLayout" name="horizontalLayout_8">
           <item>
-           <widget class="QPushButton" name="ClearTimeline1">
+           <widget class="QLabel" name="fileNameLabel">
             <property name="font">
              <font>
               <family>Consolas</family>
@@ -891,12 +922,15 @@
              </font>
             </property>
             <property name="text">
-             <string>Clear Timeline 1</string>
+             <string>Name Of File</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="ClearTimeline2">
+           <widget class="QLineEdit" name="fileNameInput"/>
+          </item>
+          <item>
+           <widget class="QPushButton" name="fileNameButton">
             <property name="font">
              <font>
               <family>Consolas</family>
@@ -904,41 +938,46 @@
              </font>
             </property>
             <property name="text">
-             <string>Clear Timeline 2</string>
+             <string>Save To File</string>
             </property>
            </widget>
           </item>
          </layout>
         </item>
-        <item row="4" column="2">
-         <layout class="QHBoxLayout" name="horizontalLayout_7">
-          <item>
-           <widget class="QPushButton" name="ClearTimeline5">
-            <property name="font">
-             <font>
-              <family>Consolas</family>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>Clear Timeline 5</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="ClearTimeline6">
-            <property name="font">
-             <font>
-              <family>Consolas</family>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>Clear Timeline 6</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
+        <item row="0" column="0">
+         <layout class="QVBoxLayout" name="verticalLayout_15"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QPushButton" name="clearButton">
+          <property name="font">
+           <font>
+            <family>Consolas</family>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Clear All Inputs</string>
+          </property>
+          <property name="autoDefault">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QPushButton" name="clearButtonGuns">
+          <property name="font">
+           <font>
+            <family>Consolas</family>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Clear Timelines</string>
+          </property>
+          <property name="autoDefault">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>

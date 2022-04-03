@@ -19,6 +19,9 @@ public:
 
 private slots:
 
+    void on_fileNameButton_clicked();
+
+    bool invalidChar2(std::string input3);
 
     void on_fireTypeSelector_currentIndexChanged(int index);
 
@@ -28,6 +31,8 @@ private slots:
 
     void on_AddMarkingRangeButton_clicked();
 
+    bool CalculateTimelineErrors(int timelineType, std::string *inputs);
+
     void on_CalculateTimelineButton_clicked();
 
     bool isInt(std::string input);
@@ -36,6 +41,8 @@ private slots:
 
     void on_clearButton_clicked();
 
+    void ClearTimeline(int index);
+
     void on_clearButtonGuns_clicked();
 
     void on_RemoveRangeButton_clicked();
@@ -43,6 +50,8 @@ private slots:
     void on_RemoveRangeButton_2Mark_clicked();
 
     //void on_CopyGunButton_clicked();
+
+    void selectGun(int index);
 
     void on_Gun_1_button_clicked();
 
