@@ -309,6 +309,14 @@ void MainWindow::on_fileNameButton_clicked()
         ofstream { path };
         myfile.open(path);
 
+        //format date and time for GMT
+        time_t currentTime = time(0); //get current date/time
+        tm *gmtm = gmtime(&currentTime); //format date/time for zulu (GMT) time
+        char* dt = asctime(gmtm);
+        dt[strlen(dt) - 1] = 0; //remove newline char at the end
+
+        myfile << "File:[" << fiName << "]   Date:[" << dt << "]" << endl << endl << endl;
+
         for(int i = 0; i < 6; i++){
             if(printInput[i].casTOT != "NA"){   //only print timelines with data
                 string pRam = "\n";
@@ -345,13 +353,6 @@ void MainWindow::on_fileNameButton_clicked()
                     pRam += "] ";
                 }
 
-                //format date and time for GMT
-                time_t currentTime = time(0); //get current date/time
-                tm *gmtm = gmtime(&currentTime); //format date/time for zulu (GMT) time
-                char* dt = asctime(gmtm);
-                dt[strlen(dt) - 1] = 0; //remove newline char at the end
-
-                myfile << "File:[" << fiName << "]   Date:[" << dt << "]" << endl << endl << endl;
                 myfile << printInput[i].tLineNum << endl;
                 myfile << pRam << endl << endl;
                 myfile << tLineArry[i] << endl << endl;
