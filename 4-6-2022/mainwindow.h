@@ -26,10 +26,11 @@ public:
     ~MainWindow();
 
 private slots:
-
     void on_fileNameButton_clicked();
 
     bool invalidChar2(std::string input3);
+
+    void clearPrintInputs(int b);
 
     void on_fireTypeSelector_currentIndexChanged(int index);
 
@@ -57,8 +58,6 @@ private slots:
 
     void on_RemoveRangeButton_2Mark_clicked();
 
-    //void on_CopyGunButton_clicked();
-
     void selectGun(int index);
 
     void on_Gun_1_button_clicked();
@@ -72,18 +71,6 @@ private slots:
     void on_Gun_5_button_clicked();
 
     void on_Gun_6_button_clicked();
-
-    //void setNewData();
-
-    //void on_input_2_textEdited(const QString &arg1);
-
-    //void on_input_1_textEdited(const QString &arg1);
-
-    //void on_input_5_textEdited(const QString &arg1);
-
-    //void on_input_3_textEdited(const QString &arg1);
-
-    //void on_MarkingSelector_currentIndexChanged(int index);
 
     void on_RemoveSingleRange_clicked();
 
