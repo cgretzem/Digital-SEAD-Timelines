@@ -292,7 +292,11 @@ void MainWindow::on_fileNameButton_clicked()
         ui->errorWindow->show();
         ui->errorWindow->setText(ui->errorWindow->toPlainText() + "ERROR: Add File Name\n");
     }
-
+    else if(fiName.length() > 255){
+        errorOccured = true;
+        ui->errorWindow->show();
+        ui->errorWindow->setText(ui->errorWindow->toPlainText() + "ERROR: File Name is Too Long");
+    }
     else if(!invalidChar2(fiName)){
         errorOccured = true;
         ui->errorWindow->show();
